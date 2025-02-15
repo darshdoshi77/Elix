@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import axios from "axios";
-import {FaPaperPlane} from "react-icons/fa";
-import Recorder from "./recorder";
+import { FaPaperPlane } from "react-icons/fa";
 
 export default function Home() {
   const [messages, setMessages] = useState<{ text: string; sender: string }[]>([]);
@@ -19,10 +18,20 @@ export default function Home() {
 
     try {
       const res = await axios.post("http://127.0.0.1:8000/chat", { message: input });
-      const botMessage = { text: res.data.response, sender: "bot" };
-      setMessages((prev) => [...prev, botMessage]);
+  
+      if (res.data.news && Array.isArray(res.data.news)) {
+        const formattedNews = (res.data.news as { title: string; source: string; link: string }[])
+        .map((news) => `🔹 ${news.title} (${news.source})\n${news.link}`).join("\n\n");
+  
+        const botMessage = { text: formattedNews, sender: "bot" };
+        setMessages((prev) => [...prev, botMessage]);
+      } else {
+        const botMessage = { text: "No relevant news found.", sender: "bot" };
+        setMessages((prev) => [...prev, botMessage]);
+      }
     } catch (error) {
       console.error("Error sending message:", error);
+      setMessages((prev) => [...prev, { text: "Error fetching news.", sender: "bot" }]);
     }
   };
 
@@ -54,9 +63,7 @@ export default function Home() {
         <button className="bg-blue-500 text-white p-2 rounded-lg" onClick={sendMessage}>
           <FaPaperPlane />
         </button>
-        <Recorder setInput={setInput} />
       </div>
     </div>
   );
 }
-

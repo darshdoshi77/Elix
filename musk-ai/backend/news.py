@@ -1,8 +1,9 @@
 import requests
 import os
-from backend.OpenAI import run_llm_function_call
+from OpenAI import *
 
-API_KEY = os.getenv("NEWSDATA_API_KEY")
+
+
 
 
 def get_news(user_request):
@@ -17,8 +18,8 @@ def get_news(user_request):
                         "type": "string",
                         "description": "The keyword to search for news."
                 },
-            "required": ["query"]
-            }
+            },
+            "required": ["query"]     
         }
     }
 
@@ -34,17 +35,18 @@ def get_news(user_request):
     """
    
    
-    gpt_response = run_llm_function_call(user_request,context_str, temperature=0.0)
+    gpt_response = run_llm_function_call(user_request,context_str, [get_news_function], temperature=0.0)
+    print("gpt output", gpt_response)
     query = gpt_response[0]["query"]
-    
+    print("query",query)
     if not query or not isinstance(query, str):
         return "Error: Unable to extract a valid search query."
 
-    url = f"https://newsdata.io/api/1/latest?apikey={API_KEY}&q={query.strip()}"
+    url = f"https://newsdata.io/api/1/latest?apikey=pub_696611aefc818c48ce9a0446c1eef81d97138&language=en&q={query}"
     
     try:
         response = requests.get(url).json()
-
+        print("response", response)
         if "results" in response and response["results"]:
             news_list = response["results"][:3] 
 
@@ -52,7 +54,7 @@ def get_news(user_request):
                 f"{news['title']} ({news['source_id']})\n {news['link']}"
                 for news in news_list
             ]
-            return "\n\n".join(formatted_news)
+            return {"news": formatted_news}
 
         else:
             return f"No news articles found for '{query}'."

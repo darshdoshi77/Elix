@@ -7,7 +7,6 @@ from fastapi.responses import Response
 import urllib.parse
 
 
-
 load_dotenv()
 
 TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
@@ -34,7 +33,7 @@ async def make_call(request: CallRequest):
         call = client.calls.create(
             to=request.number,
             from_=TWILIO_PHONE_NUMBER,
-            url=f"https://92e4-2601-644-401-b120-fc26-e02-c859-15a6.ngrok-free.app/twiml/?message={encoded_message}",
+            url=f"https://eeb6-2601-644-401-b120-fc26-e02-c859-15a6.ngrok-free.app/twiml/?message={encoded_message}",
             method = "GET"
         )
 

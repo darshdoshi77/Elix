@@ -2,9 +2,9 @@ from fastapi import FastAPI, UploadFile, File
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-from news import *
-from chat_reply import *
 from OpenAI import *
+from exa import *
+from email_sender import *
 from openai import OpenAI
 import os
 
@@ -21,7 +21,7 @@ app.add_middleware(
    allow_headers=["*"],
 )
 
-actions = ['get_stock_info', 'get_weather', 'web_search','send_email', 'chat_response','get_news','call_response']
+actions = ['web_search','chat_response','send_email']
 
 class ChatRequest(BaseModel):
     message: str
@@ -46,14 +46,19 @@ async def chat(request: ChatRequest):
 
    context_str = f"Based on the user's request, return the correct function name. Options:{actions}. Respond with ONLY one of these actions."
 
-   gpt_output = run_llm_function_call(request,context_str,[determine_action_function],temperature=0.2)
+   gpt_output = run_gpt_function_call(request,context_str,[determine_action_function],temperature=0.2)
    action = gpt_output[0]['action']
+   print("Action selection response:", action)
+
+   if action == 'web_search':
+       return {"response" : web_search(request.message)}
    
-   if action == 'get_news':
-        news_response = get_news(request.message)
-        return {"response": news_response}
-    
-    
+   elif action == 'send_email':
+       return {"response": send_email(request.message)}
+       
+   else:
+       return {"response": run_gpt_function_call(request.message,temperature=1)}
+        
  
 @app.post("/transcribe")
 

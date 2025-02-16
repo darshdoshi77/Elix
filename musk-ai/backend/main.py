@@ -1,53 +1,86 @@
 from fastapi import FastAPI, UploadFile, File
 from pydantic import BaseModel
-from openai import OpenAI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
+from OpenAI import *
+from exa import *
+from email_sender import *
+from openai import OpenAI
 import os
+
 load_dotenv()
 
 app = FastAPI()
+client = OpenAI(api_key=os.getenv("OPEN_AI_KEY"))
 
 app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+   CORSMiddleware,
+   allow_origins=["*"],
+   allow_credentials=True,
+   allow_methods=["*"],
+   allow_headers=["*"],
 )
 
-client = OpenAI(api_key=os.getenv("OPEN_AI_KEY"))
+actions = ['web_search','chat_response','send_email']
 
 class ChatRequest(BaseModel):
     message: str
-    
+
 
 @app.post("/chat")
 async def chat(request: ChatRequest):
-    response = client.chat.completions.create(
-        model="gpt-4",
-        messages=[{"role": "user", "content": request.message}]
-    )
-    return {"response": response.choices[0].message.content}
+   determine_action_function = {
+        "name": "determine_action",
+        "description": "Decides the correct function to call based on the user's request.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "action": {
+                    "type": "string",
+                    "description": "The function name that should be executed."
+                }
+             },
+            "required": ["action"]
+         }
+    }
 
+   context_str = f"Based on the user's request, return the correct function name. Options:{actions}. Respond with ONLY one of these actions."
+
+   gpt_output = run_gpt_function_call(request,context_str,[determine_action_function],temperature=0.2)
+   action = gpt_output[0]['action']
+   print("Action selection response:", action)
+
+   if action == 'web_search':
+       return {"response" : web_search(request.message)}
+   
+   elif action == 'send_email':
+       return {"response": send_email(request.message)}
+       
+   else:
+       return {"response": run_gpt_function_call(request.message,temperature=1)}
+        
+ 
 @app.post("/transcribe")
 
-
 async def voicechat(file: UploadFile = File(...)):
-    try:
-        file_location = f"temp_audio.wav"
-        with open(file_location, "wb") as buffer:
-            buffer.write(await file.read())
+   try:
+       file_location = f"temp_audio.wav"
+       with open(file_location, "wb") as buffer:
+           buffer.write(await file.read())
 
-        with open(file_location, "rb") as audio_file:
-            response = client.audio.transcriptions.create(
-                model="whisper-1",
-                file=audio_file
-            )
 
-        return {"text": response.text}
+       with open(file_location, "rb") as audio_file:
+           response = client.audio.transcriptions.create(
+               model="whisper-1",
+               file=audio_file
+           )
 
-    except Exception as e:
-        return {"error": str(e)}
-    
-    
+
+       return {"text": response.text}
+
+
+   except Exception as e:
+       return {"error": str(e)}
+  
+  
+

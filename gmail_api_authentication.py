@@ -17,7 +17,7 @@ def setup_gmail_api(credentials_path='credentials-gmail_api.json'):
     """
     SCOPES = ['https://www.googleapis.com/auth/gmail.readonly',
               'https://www.googleapis.com/auth/gmail.send',
-              'https://www.googleapis.com/auth/calendar.events']
+              'https://www.googleapis.com/auth/calendar']
 
     creds = None
     if os.path.exists('token.pickle'):

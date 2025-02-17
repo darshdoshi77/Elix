@@ -33,7 +33,7 @@ async def make_call(request: CallRequest):
         call = client.calls.create(
             to=request.number,
             from_=TWILIO_PHONE_NUMBER,
-            url=f"https://eeb6-2601-644-401-b120-fc26-e02-c859-15a6.ngrok-free.app/twiml/?message={encoded_message}",
+            url=f"https://9fc0-2601-644-401-b120-4527-8b23-98ec-1376.ngrok-free.app/twiml/?message={encoded_message}",
             method = "GET"
         )
 

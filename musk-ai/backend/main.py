@@ -5,12 +5,16 @@ from dotenv import load_dotenv
 from OpenAI import *
 from exa import *
 from email_sender import *
+from calling import *
 from openai import OpenAI
 import os
+from calling import router as twilio_router 
 
 load_dotenv()
 
 app = FastAPI()
+app.include_router(twilio_router)
+
 client = OpenAI(api_key=os.getenv("OPEN_AI_KEY"))
 
 app.add_middleware(
@@ -21,7 +25,7 @@ app.add_middleware(
    allow_headers=["*"],
 )
 
-actions = ['web_search','chat_response','send_email']
+actions = ['web_search','chat_response','send_email','call_response']
 
 class ChatRequest(BaseModel):
     message: str
@@ -55,7 +59,10 @@ async def chat(request: ChatRequest):
    
    elif action == 'send_email':
        return {"response": send_email(request.message)}
-       
+   
+   elif action == 'call_response':
+       return {"response": call_request(request.message)}
+          
    else:
        return {"response": run_gpt_function_call(request.message,temperature=1)}
         

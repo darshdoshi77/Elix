@@ -4,11 +4,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from OpenAI import *
 from exa import *
-from email_sender import *
-from email_fetcher import *
+from email_fetchandsend import *
 from calling import *
 from openai import OpenAI
 import os
+from google_calendar import *  
+from google_calendar import router as gc_router
 from calling import router as twilio_router 
 from texting import * 
 
@@ -16,6 +17,7 @@ load_dotenv()
 
 app = FastAPI()
 app.include_router(twilio_router)
+app.include_router(gc_router, prefix="/calendar")
 
 client = OpenAI(api_key=os.getenv("OPEN_AI_KEY"))
 
@@ -27,7 +29,7 @@ app.add_middleware(
    allow_headers=["*"],
 )
 
-actions = ['web_search','chat_response','send_email','call_response','text','fetch_latest_emails','fetch_specific_email_from']
+actions = ['web_search','chat_response','send_email','call_response','text','fetch_latest_emails','fetch_specific_email_from','create_event', 'check_availability','delete_event']
 
 class ChatRequest(BaseModel):
     message: str
@@ -73,6 +75,15 @@ async def chat(request: ChatRequest):
    
    elif action == 'fetch_specific_email_from':
        return {"response" : fetch_specific_email(request.message)}
+   
+   elif action == 'create_event':
+        return {"response" : await create_gc_event(request.message)}
+    
+   elif action == 'check_availability':
+        return {"response" : await check_gc_availability(request.message)}
+    
+   elif action == 'delete_event':
+       return {"response" : await delete_gc_event(request.message)}
    
    else:
        return {"response": run_gpt_function_call(request.message,temperature=1)}

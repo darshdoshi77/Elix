@@ -5,10 +5,12 @@ from dotenv import load_dotenv
 from OpenAI import *
 from exa import *
 from email_sender import *
+from email_fetcher import *
 from calling import *
 from openai import OpenAI
 import os
 from calling import router as twilio_router 
+from texting import * 
 
 load_dotenv()
 
@@ -25,7 +27,7 @@ app.add_middleware(
    allow_headers=["*"],
 )
 
-actions = ['web_search','chat_response','send_email','call_response']
+actions = ['web_search','chat_response','send_email','call_response','text','fetch_latest_emails','fetch_specific_email_from']
 
 class ChatRequest(BaseModel):
     message: str
@@ -62,7 +64,16 @@ async def chat(request: ChatRequest):
    
    elif action == 'call_response':
        return {"response": call_request(request.message)}
-          
+   
+   elif action == 'text':
+       return {"response" : send_text(request.message)}
+   
+   elif action == 'fetch_latest_emails':
+       return {"response" : fetch_recent_emails(request.message)}
+   
+   elif action == 'fetch_specific_email_from':
+       return {"response" : fetch_specific_email(request.message)}
+   
    else:
        return {"response": run_gpt_function_call(request.message,temperature=1)}
         

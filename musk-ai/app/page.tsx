@@ -5,6 +5,14 @@ import axios from "axios";
 import {FaPaperPlane} from "react-icons/fa";
 import Recorder from "./recorder";
 
+interface ResponseObject {
+  response: string;
+}
+
+interface ChatResponse {
+  responses: ResponseObject[];
+}
+
 export default function Home() {
   const [messages, setMessages] = useState<{ text: string; sender: string }[]>([]);
   const [input, setInput] = useState("");
@@ -18,9 +26,11 @@ export default function Home() {
     setInput("");
 
     try {
-      const res = await axios.post("http://127.0.0.1:8000/chat", { message: input });
-      const botMessage = { text: res.data.response, sender: "bot" };
-      setMessages((prev) => [...prev, botMessage]);
+      const res = await axios.post<ChatResponse>("http://127.0.0.1:8000/chat", { message: input });
+      res.data.responses.forEach((responseObj: ResponseObject) => {
+        const botMessage = { text: responseObj.response, sender: "bot" };
+        setMessages(prev => [...prev, botMessage]);
+      });
     } catch (error) {
       console.error("Error sending message:", error);
     }

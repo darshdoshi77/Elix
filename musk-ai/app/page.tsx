@@ -37,14 +37,14 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col items-center h-screen bg-gray-100 p-4">
-      <h1 className="text-2xl font-bold mb-4">Musk AI</h1>
+    <div className="flex flex-col items-center h-screen bg-black p-4 text-white">
+      <h1 className="text-2xl font-bold mb-4 text-white">Musk AI</h1>
 
-      <div className="w-full max-w-[80%] bg-white shadow-md rounded-lg p-4 h-[75vh] overflow-y-auto">
+      <div className="w-full max-w-[80%] bg-gray-800 shadow-md rounded-lg p-4 h-[75vh] overflow-y-auto">
         {messages.map((msg, index) => (
           <div
             key={index}
-            className={`p-2 rounded-lg my-1 w-fit max-w-[80%] ${msg.sender === "user" ? "bg-blue-500 text-white ml-auto" : "bg-gray-300 text-black"}`}
+            className={`p-2 rounded-lg my-1 w-fit max-w-[80%] ${msg.sender === "user" ? "bg-green-300 text-black ml-auto" : "bg-blue-400 text-black"}`}
           >
             {msg.text}
           </div>
@@ -53,12 +53,12 @@ export default function Home() {
 
       <div className="flex w-full max-w-[80%] items-center gap-2 mt-4">
         <input
-          className="flex-1 p-2 border rounded-lg"
+          className="flex-1 p-2 border rounded-lg bg-gray-800 text-white"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Type a message..."
           onKeyDown={(e) => {
-            if (e.key === "Enter") sendMessage(); // Handle Enter key
+            if (e.key === "Enter") sendMessage(); 
           }}
         />
         <button className="bg-blue-500 text-white p-2 rounded-lg" onClick={sendMessage}>
@@ -69,4 +69,3 @@ export default function Home() {
     </div>
   );
 }
-

@@ -12,7 +12,7 @@ def web_search(request):
     
     response = ""
     for chunk in result:
-        response = str(chunk)
+        response += str(chunk)
         
     return response
         

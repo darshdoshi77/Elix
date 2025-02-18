@@ -6,6 +6,7 @@ from twilio.rest import Client
 from fastapi.responses import Response
 import urllib.parse
 from OpenAI import *
+from MongoDBclient import *
 
 load_dotenv()
 
@@ -19,6 +20,7 @@ client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
 
 def call_request(request):
+    
     calling_function = {
         "name": "contact_details",
         "description": "Extracts the name, number and message based on the user's request.",
@@ -31,15 +33,17 @@ def call_request(request):
                 },
                 "number":{
                     "type": "string",
-                    "description": "The subject of the email" 
+                    "description": "The subject of the email",
+                    "default" : "",
                 },
                 "message":{
                     "type": "string",
-                    "description": "The message of the email" 
+                    "description": "The message of the email"
                 },
              },
-        },
             "required": ["name","number","message"]
+        },
+            
     }
     context_str = "extract the relevant details regarding the call request"
     
@@ -48,13 +52,21 @@ def call_request(request):
     number = gpt_output[0]['number']
     message = gpt_output[0]['message']
     
+    if check_name_in_db(name) and get_number(name) is not None:
+        number = get_number(name)
+    elif check_name_in_db(name) and get_number(name) is None:
+        update_user_info_with_number(name,number)
+    else:
+        add_user_info(name,number,"")
+    
+    
     encoded_message = urllib.parse.quote(message)
     try:
        
-        call = client.calls.create(
+        client.calls.create(
             to=number,
             from_=TWILIO_PHONE_NUMBER,
-            url=f"https://c0cf-2601-644-401-b120-4527-8b23-98ec-1376.ngrok-free.app/twiml/?message={encoded_message}",
+            url=f"https://a869-2601-644-401-b120-4527-8b23-98ec-1376.ngrok-free.app/twiml/?message={encoded_message}",
             method = "GET"
         )
 

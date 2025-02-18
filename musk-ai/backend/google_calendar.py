@@ -94,8 +94,8 @@ async def check_gc_availability(request):
     end_time = gpt_output[0]['end_time']
     timezone = gpt_output[0]['timezone']
 
-    # Convert start_time and end_time to proper ISO format
-    start_time_iso = f"{start_time}-08:00"  # Append timezone offset manually
+    
+    start_time_iso = f"{start_time}-08:00"  
     end_time_iso = f"{end_time}-08:00"
 
     print(f"Checking availability from {start_time_iso} to {end_time_iso} in timezone {timezone}")

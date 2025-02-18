@@ -6,38 +6,54 @@ from googleapiclient.discovery import build
 from OpenAI import *
 from bs4 import BeautifulSoup
 import json
-
-
+from MongoDBclient import *
 
 def send_email(request):
     email_function = {
         "name": "email_details",
-        "description": "Extracts the recipient, subject and message based on the user's request.",
+        "description": "Extracts the name, recipient, subject and message based on the user's request.",
         "parameters": {
             "type": "object",
             "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The name of the recipient",
+                    "default" : ""
+                },
                 "recipient": {
                     "type": "string",
-                    "description": "The recipient of the email"
+                    "description": "The recipient of the email",
+                    "default": ""
                 },
                 "subject":{
                     "type": "string",
-                    "description": "The subject of the email" 
+                    "description": "The subject of the email",
+                    "default": ""     
                 },
                 "message_text":{
                     "type": "string",
                     "description": "The message of the email" 
                 },
              },
+             "required": ["name","recipient","subject","message_text"]
         },
-            "required": ["recipient","subject","message_text"]
+           
     }
     context_str = "extract the relevant details regarding the email request"
     
     gpt_output = run_gpt_function_call(request, context_str, [email_function])
+    name = gpt_output[0]['name']
     recipient = gpt_output[0]['recipient']
     subject = gpt_output[0]['subject']
     message_text = gpt_output[0]['message_text']
+    
+    if check_name_in_db(name) and get_email_id(name) is not None:
+        recipient = get_email_id(name)
+    elif check_name_in_db(name) and get_email_id(name) is None:
+        update_user_info_with_email(name,recipient)
+    else:
+        add_user_info(name,"",recipient)
+        
     
     service = get_gmail_service()
 
@@ -114,22 +130,40 @@ def fetch_recent_emails(request):
 def fetch_specific_email(request):
     specific_email_function = {
         "name": "specific_email",
-        "description": "Extracts email address based on the user's request.",
+        "description": "Extracts name and email address based on the user's request.",
         "parameters": {
             "type": "object",
             "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The name associated with the specific email.",
+                    "default" : ""
+                },
+                
                 "specific_email_id": {
                     "type": "string",
-                    "description": "The specific email id."
+                    "description": "The specific email id.",
+                    "default" : ""
                 },
              },
+            "required": ["name", "specific_email_id"]
         },
-            "required": ["specific_email_id"]
+        
     }
-    context_str = "extract the specific email id"
+    context_str = "extract the name and specific email id"
     
     gpt_output = run_gpt_function_call(request, context_str, [specific_email_function])
-    sender_email = gpt_output[0]['specific_email_id']
+    print("gpt out", gpt_output)
+    name = gpt_output[0].get('name','')
+    sender_email = gpt_output[0].get('specific_email_id','')
+   
+    if check_name_in_db(name) and get_email_id(name) is not None:
+        sender_email = get_email_id(name)
+    elif check_name_in_db(name) and get_email_id(name) is None:
+        update_user_info_with_email(name,sender_email)
+    else:
+        add_user_info(name,"",sender_email)
+   
    
     service = get_gmail_service()
 

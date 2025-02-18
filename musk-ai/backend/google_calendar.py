@@ -115,7 +115,7 @@ async def check_gc_availability(request):
 
         if busy_slots:
             formatted_busy_times = format_busy_slots(busy_slots)
-            return f"Not Available, busy_slots: {formatted_busy_times}"
+            return f"Not Available, Busy Slots: {formatted_busy_times}"
         
         return "Available"
     

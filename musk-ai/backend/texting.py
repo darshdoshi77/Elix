@@ -30,7 +30,9 @@ def send_text(request):
     context_str = "extract the relevant details regarding the call request"
     
     gpt_output = run_gpt_function_call(request, context_str, [text_function])
-    name = gpt_output[0]['name']
+
+    name = gpt_output[0]["name"]
+
     phone_number = gpt_output[0].get('phone_number','')
     message = gpt_output[0]['message']
     

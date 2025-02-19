@@ -49,7 +49,7 @@ def call_request(request):
     
     gpt_output = run_gpt_function_call(request, context_str, [calling_function])
     name = gpt_output[0]['name']
-    number = gpt_output[0]['number']
+    number = gpt_output[0].get('number','')
     message = gpt_output[0]['message']
     
     if check_name_in_db(name) and get_number(name) is not None:

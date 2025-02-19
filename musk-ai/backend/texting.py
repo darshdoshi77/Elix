@@ -31,7 +31,7 @@ def send_text(request):
     
     gpt_output = run_gpt_function_call(request, context_str, [text_function])
     name = gpt_output[0]['name']
-    phone_number = gpt_output[0]['phone_number']
+    phone_number = gpt_output[0].get('phone_number','')
     message = gpt_output[0]['message']
     
     if check_name_in_db(name) and get_number(name) is not None:

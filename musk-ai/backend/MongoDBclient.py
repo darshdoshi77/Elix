@@ -36,7 +36,6 @@ def get_email_id(name:str):
     return user.get("email") if user else None
     
     
-
 def check_name_in_db(name: str)-> bool:
     return user_collections.find_one({"name":name}) is not None
 

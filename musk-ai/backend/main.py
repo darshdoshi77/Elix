@@ -86,16 +86,7 @@ async def chat(request: ChatRequest):
    
     elif action == 'fetch_specific_email_from':
        responses.append({"response" : fetch_specific_email(request.message)})
-   
-    elif action == 'create_event':
-        responses.append({"response" : await create_gc_event(request.message)})
-    
-    elif action == 'check_availability':
-        responses.append({"response" : await check_gc_availability(request.message)})
-    
-    elif action == 'delete_event':
-       responses.append({"response" : await delete_gc_event(request.message)})
-   
+       
     else:
        responses.append({"response": run_gpt_function_call(request.message,temperature=1)})
         

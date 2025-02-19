@@ -44,7 +44,7 @@ export default function Home() {
         {messages.map((msg, index) => (
           <div
             key={index}
-            className={`p-2 rounded-lg my-1 w-fit max-w-[80%] ${msg.sender === "user" ? "bg-green-300 text-black ml-auto" : "bg-blue-400 text-black"}`}
+            className={`p-2 rounded-lg my-1 w-fit max-w-[80%] ${msg.sender === "user" ? "bg-green-300 text-black ml-auto" : "bg-blue-300 text-black"}`}
           >
             {msg.text}
           </div>

@@ -1,175 +1,61 @@
+# Musk AI: Personal AI Assistant
 
-# Musk AI - AI Chatbot with Web Search, Calls, Texting & Calendar Integration
-
-Musk AI is an AI-powered assistant built using **Next.js (React + TypeScript) for the frontend** and **FastAPI (Python) for the backend**. It integrates **OpenAI's GPT, Twilio (for calls and texting), Google Calendar API (for event management), and Exa (for web search).**
+## Overview
+Musk AI is a personal AI assistant designed to streamline your daily tasks by integrating advanced AI capabilities with essential productivity tools. With support for calling, texting, email management, Google Calendar integration, and OpenAI-powered intelligence, Musk AI helps you stay organized and efficient.
 
 ## Features
-- **Chat with AI** powered by OpenAI (GPT-4).
-- **Web Search** using Exa API.
-- **Send Emails** via Gmail API.
-- **Text Messages & Calls** using Twilio.
-- **Google Calendar Integration**:
-  - Create events
-  - Check availability
-  - Delete events
-- **Voice Input & Transcription** using Whisper AI.
+- **Voice Calling**: Make and receive calls directly from the assistant.
+- **Text Messaging**: Send and receive SMS messages.
+- **Email Management**: Fetch, read, and send emails using your connected account.
+- **Google Calendar Integration**: View, create, and manage calendar events.
+- **OpenAI Integration**: Leverage powerful AI for natural language understanding and task automation.
+- **Modern Web Interface**: Built with Next.js and Tailwind CSS for a responsive, user-friendly experience.
 
----
+## Setup
+### Prerequisites
+- Node.js (v16+ recommended)
+- Python 3.8+
+- pip (Python package manager)
+- Google API credentials (for Calendar and Gmail)
+- OpenAI API key
 
-## Tech Stack
-| Component     | Technology |
-|--------------|------------|
-| **Frontend** | Next.js (React + TypeScript), Tailwind CSS |
-| **Backend**  | FastAPI (Python) |
-| **Database** | MongoDB (for storing user data) |
-| **APIs Used** | OpenAI, Twilio, Google Calendar, Exa |
+### Installation
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/yourusername/musk-ai.git
+   cd musk-ai
+   ```
+2. **Install Node.js dependencies:**
+   ```bash
+   npm install
+   ```
+3. **Install Python dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. **Set up environment variables:**
+   - Place your Google API credentials in `backend/credentials-google_api.json`.
+   - Set your OpenAI API key in the appropriate config or environment variable.
 
----
+5. **Start the backend server:**
+   ```bash
+   python backend/main.py
+   ```
+6. **Start the frontend:**
+   ```bash
+   npm run dev
+   ```
 
-## Installation & Setup
-### Clone the Repository
-```bash
-git clone https://github.com/yourusername/musk-ai.git
-cd musk-ai
-```
-
-### Backend Setup (FastAPI)
-#### Install dependencies
-```bash
-cd backend
-pip install -r requirements.txt
-```
-
-#### Set up environment variables
-Create a `.env` file inside the `backend/` directory and add:
-```ini
-OPEN_AI_KEY=your-openai-api-key
-TWILIO_ACCOUNT_SID=your-twilio-sid
-TWILIO_AUTH_TOKEN=your-twilio-auth-token
-TWILIO_PHONE_NUMBER=your-twilio-phone-number
-DATABASE_URI=your-mongodb-uri
-EXA_API_KEY=your-exa-api-key
-```
-
-#### Run FastAPI server
-```bash
-uvicorn main:app --reload
-```
-Your backend is now running at `http://127.0.0.1:8000`
-
----
-
-### Frontend Setup (Next.js)
-#### Install dependencies
-```bash
-cd app
-npm install
-```
-
-#### Run Next.js Development Server
-```bash
-npm run dev
-```
-Your frontend is now running at `http://localhost:3000`
-
----
-
-## API Endpoints
-| Method | Endpoint | Description |
-|--------|---------|-------------|
-| `POST` | `/chat` | Process chat requests and decide the correct AI action |
-| `POST` | `/transcribe` | Convert voice input to text using Whisper AI |
-| `POST` | `/create_event` | Create a Google Calendar event |
-| `GET`  | `/check_availability` | Check if a time slot is free on Google Calendar |
-| `DELETE` | `/delete_event` | Delete a calendar event by title |
-| `POST` | `/send_email` | Send an email using Gmail API |
-| `POST` | `/text` | Send a text message using Twilio |
-| `POST` | `/call` | Make a phone call using Twilio |
-
----
-
-## Project Structure
-```
-musk-ai/
-│── app/                  # Next.js frontend
-│   ├── globals.css       # Styling
-│   ├── layout.tsx        # Main layout
-│   ├── page.tsx          # Chat UI
-│   ├── recorder.tsx      # Voice input UI
-│
-│── backend/              # FastAPI backend
-│   ├── integrations/     # External API integrations
-│   ├── calling.py        # Twilio call handling
-│   ├── texting.py        # Twilio SMS handling
-│   ├── google_calendar.py # Google Calendar API integration
-│   ├── email_fetchsend.py # Gmail API integration
-│   ├── OpenAI.py         # OpenAI API integration
-│   ├── main.py           # FastAPI app entry point
-│   ├── MongoDBclient.py  # MongoDB user storage
-│   ├── token.pickle      # Google API credentials
-│
-└── README.md             # Project documentation
-```
-
----
-
-## Example Usage
-### Chatting with AI
-Send a `POST` request to `/chat` with:
-```json
-{
-  "message": "Schedule a meeting with John at 3 PM tomorrow"
-}
-```
-AI will process the request and create a Google Calendar event.
-
----
-
-### Making a Call via Twilio
-Send a `POST` request to `/call` with:
-```json
-{
-  "name": "John Doe",
-  "message": "Hello, this is an automated call!"
-}
-```
-AI will fetch John’s phone number from MongoDB and place the call.
-
----
-
-### Sending a Text Message
-Send a `POST` request to `/text` with:
-```json
-{
-  "name": "John Doe",
-  "message": "Hey John, let's meet at 5 PM!"
-}
-```
-AI will retrieve John’s number and send the message via Twilio.
-
----
-
-## Future Improvements
-- Add OAuth-based user authentication.
-- Improve AI’s ability to process complex requests.
-- Enhance error handling for external API failures.
-
----
-
-## License
-This project is licensed under the **MIT License**.
-
----
+## Usage
+- Access the web interface at `http://localhost:3000`.
+- Use the assistant to make calls, send texts, manage emails, and interact with your calendar.
+- All AI-powered features are enabled via OpenAI integration.
 
 ## Contributing
-Want to contribute? Fork the repo, create a feature branch, and submit a pull request.
+Contributions are welcome! Please open issues or submit pull requests for new features, bug fixes, or improvements.
 
----
-
-## Author
-Darsh Doshi  
-Email: darshdoshi16@berkeley.edu  
-[LinkedIn](https://linkedin.com/in/darsh-doshi) | [GitHub](https://github.com/darshdoshi16)
+## License
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 
 

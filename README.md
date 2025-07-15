@@ -1,7 +1,7 @@
-# Musk AI: Personal AI Assistant
+# Elix AI: Personal AI Assistant
 
 ## Overview
-Musk AI is a personal assistant designed to streamline your daily tasks by integrating essential productivity tools into a single, modern web application. With support for calling, texting, email management, and Google Calendar integration, Musk AI helps you stay organized and efficient. The platform is built for extensibility, enabling future integration of additional smart features and services.
+Elix AI is a personal assistant designed to streamline your daily tasks by integrating essential productivity tools into a single, modern web application. With support for calling, texting, email management, and Google Calendar integration, Musk AI helps you stay organized and efficient. The platform is built for extensibility, enabling future integration of additional smart features and services.
 
 ## Features
 - **Voice Calling**: Make and receive calls directly from the assistant.

@@ -49,7 +49,7 @@ Elix AI is a personal assistant designed to streamline your daily tasks by integ
 - Use the assistant to make calls, send texts, manage emails, and interact with your calendar—all from one place.
 
 ## Future Potential
-Musk AI is designed with extensibility in mind. Planned and potential future enhancements include:
+Elix AI is designed with extensibility in mind. Planned and potential future enhancements include:
 - Integration with additional productivity and communication platforms
 - Advanced automation and smart scheduling features
 - Personalized notifications and reminders

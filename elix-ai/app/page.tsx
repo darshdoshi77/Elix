@@ -2,8 +2,11 @@
 
 import { useState } from "react";
 import axios from "axios";
-import {FaPaperPlane} from "react-icons/fa";
-import Recorder from "./recorder";
+import { FaPaperPlane } from "react-icons/fa";
+import dynamic from "next/dynamic";
+
+// Dynamically import Recorder with SSR disabled
+const Recorder = dynamic(() => import("./recorder"), { ssr: false });
 
 interface ResponseObject {
   response: string;
@@ -22,7 +25,6 @@ export default function Home() {
 
     const newMessage = { text: input, sender: "user" };
     setMessages((prev) => [...prev, newMessage]);
-
     setInput("");
 
     try {
@@ -58,7 +60,7 @@ export default function Home() {
           onChange={(e) => setInput(e.target.value)}
           placeholder="Type a message..."
           onKeyDown={(e) => {
-            if (e.key === "Enter") sendMessage(); 
+            if (e.key === "Enter") sendMessage();
           }}
         />
         <button className="bg-blue-500 text-white p-2 rounded-lg" onClick={sendMessage}>

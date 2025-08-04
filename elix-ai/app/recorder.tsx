@@ -6,7 +6,7 @@ import axios from "axios";
 export default function Recorder({ setInput }: { setInput: (text: string) => void }) {
   const [recording, setRecording] = useState(false);
   
-  const { startRecording, stopRecording, mediaBlobUrl } = useReactMediaRecorder({
+  const { startRecording, stopRecording } = useReactMediaRecorder({
     audio: true,
     onStop: async (blobUrl, blob) => {
       console.log("Recording stopped, sending file...");
